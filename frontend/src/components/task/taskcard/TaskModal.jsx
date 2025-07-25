@@ -1,14 +1,12 @@
-// components/task/taskcard/TaskModal.jsx
 import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, FileText, Tag } from 'lucide-react';
 
-const TaskModal = ({ isOpen, onClose, onSubmit, task = null }) => {
+const TaskModal = ({ isOpen, onClose, onSave, task }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    priority: 'medium',
     status: 'todo',
-    dueDate: ''
+    priority: 'medium'
   });
 
   useEffect(() => {
@@ -16,131 +14,127 @@ const TaskModal = ({ isOpen, onClose, onSubmit, task = null }) => {
       setFormData({
         title: task.title || '',
         description: task.description || '',
-        priority: task.priority || 'medium',
         status: task.status || 'todo',
-        dueDate: task.dueDate || ''
+        priority: task.priority || 'medium'
       });
     } else {
       setFormData({
         title: '',
         description: '',
-        priority: 'medium',
         status: 'todo',
-        dueDate: ''
+        priority: 'medium'
       });
     }
   }, [task]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSave(formData);
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Overlay - Corrigido para não ficar totalmente preto */}
-      <div 
-        className="absolute inset-0 bg-gray-900/40"
-        onClick={onClose}
-      />
-      
-      {/* Modal - Com z-10 para ficar acima do overlay */}
-      <div className="relative z-10 bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-auto">
-        {/* Header */}
-        <div className="bg-orange-500 text-white p-6 rounded-t-2xl">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold">
-                {task ? 'EDITAR TAREFA' : 'CRIAR NOVA TAREFA'}
-              </h2>
-              <p className="text-orange-100 mt-1 text-sm">
-                Preencha os dados abaixo para {task ? 'editar' : 'criar'} sua tarefa
-              </p>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-white/20 rounded-lg transition-colors"
-              type="button"
-            >
-              <X className="w-6 h-6" />
-            </button>
-          </div>
+    <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-gray-800">
+            {task ? 'Editar Tarefa' : 'Nova Tarefa'}
+          </h2>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <X className="w-5 h-5 text-gray-600" />
+          </button>
         </div>
-        
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6">
-          <div className="space-y-5">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Título
-              </label>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Título
+            </label>
+            <div className="relative">
+              <FileText className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="text"
+                name="title"
                 value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                placeholder="Digite o título da tarefa"
+                onChange={handleChange}
                 required
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
+                placeholder="Digite o título da tarefa"
               />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Descrição
-              </label>
-              <textarea
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
-                rows="4"
-                placeholder="Descreva sua tarefa..."
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Prioridade
-                </label>
-                <select
-                  value={formData.priority}
-                  onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
-                >
-                  <option value="low">Baixa</option>
-                  <option value="medium">Média</option>
-                  <option value="high">Alta</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Data de Vencimento
-                </label>
-                <input
-                  type="date"
-                  value={formData.dueDate}
-                  onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                />
-              </div>
             </div>
           </div>
 
-          {/* Botões - Corrigidos e visíveis */}
-          <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-8">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Descrição
+            </label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+              rows={4}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 resize-none"
+              placeholder="Descreva os detalhes da tarefa"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Status
+              </label>
+              <select
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
+              >
+                <option value="todo">A fazer</option>
+                <option value="in_progress">Em progresso</option>
+                <option value="completed">Concluído</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Prioridade
+              </label>
+              <select
+                name="priority"
+                value={formData.priority}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
+              >
+                <option value="low">Baixa</option>
+                <option value="medium">Média</option>
+                <option value="high">Alta</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="flex gap-3 pt-4">
             <button
               type="button"
               onClick={onClose}
-              className="w-full sm:w-auto px-8 py-3 text-gray-700 bg-red-100 hover:bg-red-200 rounded-lg font-semibold transition-colors uppercase"
+              className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="w-full sm:w-auto px-8 py-3 text-white bg-teal-500 hover:bg-teal-600 rounded-lg font-semibold transition-colors uppercase"
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-lg hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-200 font-medium"
             >
               {task ? 'Salvar' : 'Criar'}
             </button>

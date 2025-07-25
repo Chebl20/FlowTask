@@ -1,84 +1,160 @@
-// services/api.js
-const API_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'http://localhost:8080';
 
-// Função helper para lidar com respostas
-const handleResponse = async (response) => {
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(error || 'Erro na requisição');
+class TarefaAPI {
+  constructor() {
+    this.baseUrl = API_BASE_URL;
+    this.token = localStorage.getItem('token');
   }
-  return response.json();
-};
 
-// Service de tarefas
-export const taskService = {
-  // Buscar todas as tarefas
-  getAll: async () => {
-    const response = await fetch(`${API_URL}/tasks`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}` // se tiver autenticação
-      }
-    });
-    return handleResponse(response);
-  },
-
-  // Buscar tarefa por ID
-  getById: async (id) => {
-    const response = await fetch(`${API_URL}/tasks/${id}`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    return handleResponse(response);
-  },
-
-  // Criar nova tarefa
-  create: async (task) => {
-    const response = await fetch(`${API_URL}/tasks`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify(task)
-    });
-    return handleResponse(response);
-  },
-
-  // Atualizar tarefa
-  update: async (id, task) => {
-    const response = await fetch(`${API_URL}/tasks/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify(task)
-    });
-    return handleResponse(response);
-  },
-
-  // Deletar tarefa
-  delete: async (id) => {
-    const response = await fetch(`${API_URL}/tasks/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    return response.ok;
-  },
-
-  // Atualizar apenas o status
-  updateStatus: async (id, status) => {
-    const response = await fetch(`${API_URL}/tasks/${id}/status`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify({ status })
-    });
-    return handleResponse(response);
+  // Configuração padrão para requisições autenticadas
+  getAuthHeaders() {
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`
+    };
   }
-};
+
+  // Autenticação
+  async login(email, password) {
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        this.token = data.token;
+        localStorage.setItem('token', data.token);
+        return { success: true, data };
+      }
+      
+      return { success: false, error: 'Credenciais inválidas' };
+    } catch (error) {
+      return { success: false, error: 'Erro ao conectar com o servidor' };
+    }
+  }
+
+  async registrar(usuario) {
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/registrar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(usuario)
+      });
+
+      if (response.ok) {
+        return { success: true };
+      }
+      
+      const error = await response.json();
+      return { success: false, error: error.message || 'Erro ao registrar' };
+    } catch (error) {
+      return { success: false, error: 'Erro ao conectar com o servidor' };
+    }
+  }
+
+  // Tarefas
+  async criarTarefa(tarefa) {
+    try {
+      const response = await fetch(`${this.baseUrl}/tarefa/criarTarefa`, {
+        method: 'POST',
+        headers: this.getAuthHeaders(),
+        body: JSON.stringify(tarefa)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return { success: true, data };
+      }
+      
+      return { success: false, error: 'Erro ao criar tarefa' };
+    } catch (error) {
+      return { success: false, error: 'Erro ao conectar com o servidor' };
+    }
+  }
+
+  async listarTarefas() {
+    try {
+      const response = await fetch(`${this.baseUrl}/tarefa/listarTarefas`, {
+        method: 'GET',
+        headers: this.getAuthHeaders()
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return { success: true, data };
+      }
+      
+      return { success: false, error: 'Erro ao listar tarefas' };
+    } catch (error) {
+      return { success: false, error: 'Erro ao conectar com o servidor' };
+    }
+  }
+
+  async buscarTarefa(id) {
+    try {
+      const response = await fetch(`${this.baseUrl}/tarefa/${id}`, {
+        method: 'GET',
+        headers: this.getAuthHeaders()
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return { success: true, data };
+      }
+      
+      return { success: false, error: 'Tarefa não encontrada' };
+    } catch (error) {
+      return { success: false, error: 'Erro ao conectar com o servidor' };
+    }
+  }
+
+  async atualizarTarefa(id, tarefa) {
+    try {
+      const response = await fetch(`${this.baseUrl}/tarefa/atualizarTarefa/${id}`, {
+        method: 'PUT',
+        headers: this.getAuthHeaders(),
+        body: JSON.stringify(tarefa)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return { success: true, data };
+      }
+      
+      return { success: false, error: 'Erro ao atualizar tarefa' };
+    } catch (error) {
+      return { success: false, error: 'Erro ao conectar com o servidor' };
+    }
+  }
+
+  async deletarTarefa(id) {
+    try {
+      const response = await fetch(`${this.baseUrl}/tarefa/deletarTarefa/${id}`, {
+        method: 'DELETE',
+        headers: this.getAuthHeaders()
+      });
+
+      if (response.ok) {
+        return { success: true };
+      }
+      
+      return { success: false, error: 'Erro ao deletar tarefa' };
+    } catch (error) {
+      return { success: false, error: 'Erro ao conectar com o servidor' };
+    }
+  }
+
+  logout() {
+    this.token = null;
+    localStorage.removeItem('token');
+  }
+
+  isAuthenticated() {
+    return !!this.token;
+  }
+}
+
+export default new TarefaAPI();

@@ -1,81 +1,117 @@
-// hooks/useTasks.jsx
 import { useState, useEffect } from 'react';
+import api from '../services/api';
 
 export const useTasks = () => {
   const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Dados mock para teste
-  useEffect(() => {
+  // Mapear status da API para o formato do frontend
+  const mapTaskStatus = (status) => {
+    const statusMap = {
+      'Pendente': 'todo',
+      'Em Progresso': 'in_progress',
+      'Concluída': 'completed'
+    };
+    return statusMap[status] || 'todo';
+  };
+
+  // Mapear status do frontend para a API
+  const mapStatusToAPI = (status) => {
+    const statusMap = {
+      'todo': 'Pendente',
+      'in_progress': 'Em Progresso',
+      'completed': 'Concluída'
+    };
+    return statusMap[status] || 'Pendente';
+  };
+
+  // Carregar tarefas
+  const loadTasks = async () => {
     setLoading(true);
-    setTimeout(() => {
-      setTasks([
-        {
-          id: 1,
-          title: 'Tarefa de exemplo 1',
-          description: 'Descrição da tarefa 1',
-          status: 'todo',
-          priority: 'high',
-          dueDate: '2025-01-30'
-        },
-        {
-          id: 2,
-          title: 'Tarefa de exemplo 2',
-          description: 'Descrição da tarefa 2',
-          status: 'in_progress',
-          priority: 'medium',
-          dueDate: '2025-01-28'
-        }
-      ]);
-      setLoading(false);
-    }, 1000);
-  }, []);
+    const result = await api.listarTarefas();
+    
+    if (result.success) {
+      // Transformar tarefas da API para o formato do frontend
+      const mappedTasks = result.data.map(task => ({
+        id: task.id,
+        title: task.titulo,
+        description: task.descricao,
+        status: mapTaskStatus(task.status),
+        priority: 'medium', // A API não tem prioridade, então vamos definir como padrão
+        userId: task.usuarioId,
+        userName: task.nomeUsuario
+      }));
+      setTasks(mappedTasks);
+      setError(null);
+    } else {
+      setError(result.error);
+    }
+    setLoading(false);
+  };
 
+  // Criar tarefa
   const createTask = async (taskData) => {
-    try {
-      const newTask = { ...taskData, id: Date.now() };
-      setTasks([...tasks, newTask]);
+    const apiTask = {
+      titulo: taskData.title,
+      descricao: taskData.description,
+      statusTarefa: mapStatusToAPI(taskData.status || 'todo')
+    };
+
+    const result = await api.criarTarefa(apiTask);
+    
+    if (result.success) {
+      await loadTasks(); // Recarregar lista
       return { success: true };
-    } catch (error) {
-      return { success: false, error: error.message };
     }
+    
+    return { success: false, error: result.error };
   };
 
+  // Atualizar tarefa
   const updateTask = async (id, taskData) => {
-    try {
-      setTasks(tasks.map(task => task.id === id ? { ...task, ...taskData } : task));
+    const apiTask = {
+      titulo: taskData.title,
+      descricao: taskData.description,
+      statusTarefa: mapStatusToAPI(taskData.status)
+    };
+
+    const result = await api.atualizarTarefa(id, apiTask);
+    
+    if (result.success) {
+      await loadTasks(); // Recarregar lista
       return { success: true };
-    } catch (error) {
-      return { success: false, error: error.message };
     }
+    
+    return { success: false, error: result.error };
   };
 
+  // Deletar tarefa
   const deleteTask = async (id) => {
-    try {
+    const result = await api.deletarTarefa(id);
+    
+    if (result.success) {
       setTasks(tasks.filter(task => task.id !== id));
       return { success: true };
-    } catch (error) {
-      return { success: false, error: error.message };
     }
+    
+    return { success: false, error: result.error };
   };
 
-  const updateTaskStatus = async (id, status) => {
-    return updateTask(id, { status });
-  };
-
-  const refetch = () => {
-    // Recarregar dados
-  };
+  // Carregar tarefas ao montar o componente
+  useEffect(() => {
+    if (api.isAuthenticated()) {
+      loadTasks();
+    }
+  }, []);
 
   return {
     tasks,
     loading,
     error,
+    loadTasks,
     createTask,
     updateTask,
-    deleteTask,
-    updateTaskStatus,
-    refetch
+    deleteTask
   };
 };

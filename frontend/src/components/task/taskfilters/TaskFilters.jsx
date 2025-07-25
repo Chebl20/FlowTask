@@ -1,6 +1,5 @@
-// components/task/taskfilters/TaskFilters.jsx
 import React from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, ChevronDown } from 'lucide-react';
 
 const TaskFilters = ({
   filterStatus,
@@ -10,51 +9,58 @@ const TaskFilters = ({
   onNewTask
 }) => {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div className="w-full bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-6">
+      <div className="flex flex-col gap-4">
         {/* Filtros */}
-        <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-          <div className="flex-1 sm:flex-initial min-w-[150px]">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="lg:col-span-1">
+            <label className="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">
               Status
             </label>
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            >
-              <option value="all">Todos</option>
-              <option value="todo">A fazer</option>
-              <option value="in_progress">Em progresso</option>
-              <option value="completed">Concluído</option>
-            </select>
+            <div className="relative">
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className="w-full appearance-none bg-gray-50 px-4 py-2.5 pr-10 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:bg-white focus:ring-2 focus:ring-orange-500/20 transition-all cursor-pointer"
+              >
+                <option value="all">All Status</option>
+                <option value="todo">To Do</option>
+                <option value="in_progress">In Progress</option>
+                <option value="completed">Completed</option>
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+            </div>
           </div>
 
-          <div className="flex-1 sm:flex-initial min-w-[150px]">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Prioridade
+          <div className="lg:col-span-1">
+            <label className="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">
+              Priority
             </label>
-            <select
-              value={filterPriority}
-              onChange={(e) => setFilterPriority(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+            <div className="relative">
+              <select
+                value={filterPriority}
+                onChange={(e) => setFilterPriority(e.target.value)}
+                className="w-full appearance-none bg-gray-50 px-4 py-2.5 pr-10 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:bg-white focus:ring-2 focus:ring-orange-500/20 transition-all cursor-pointer"
+              >
+                <option value="all">All Priorities</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+            </div>
+          </div>
+
+          <div className="lg:col-span-2 flex items-end">
+            <button
+              onClick={onNewTask}
+              className="w-full sm:w-auto sm:ml-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-lg hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-200 font-medium"
             >
-              <option value="all">Todas</option>
-              <option value="low">Baixa</option>
-              <option value="medium">Média</option>
-              <option value="high">Alta</option>
-            </select>
+              <Plus className="w-4 h-4" />
+              New Task
+            </button>
           </div>
         </div>
-
-        {/* Botão Nova Tarefa */}
-        <button
-          onClick={onNewTask}
-          className="w-full md:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-medium"
-        >
-          <Plus className="w-5 h-5" />
-          Nova Tarefa
-        </button>
       </div>
     </div>
   );

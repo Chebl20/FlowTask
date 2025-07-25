@@ -1,35 +1,42 @@
-// components/layout/Layout.jsx
 import React, { useState } from 'react';
 import Header from '../header/Header';
 import Sidebar from '../sidebar/Sidebar';
 
-const Layout = ({ children }) => {
+const Layout = ({ children, onLogout }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeMenuItem, setActiveMenuItem] = useState('tasks');
   const [menuItems] = useState([
     { id: 'dashboard', label: 'Dashboard', icon: 'Home', bottom: false },
-    { id: 'tasks', label: 'Tarefas', icon: 'CheckSquare', bottom: false },
-    { id: 'projects', label: 'Projetos', icon: 'Folder', bottom: false },
-    { id: 'settings', label: 'Configurações', icon: 'Settings', bottom: true },
+    { id: 'tasks', label: 'Tasks', icon: 'CheckSquare', bottom: false, count: 12 },
+    { id: 'projects', label: 'Projects', icon: 'Folder', bottom: false, count: 5 },
+    { id: 'calendar', label: 'Calendar', icon: 'Calendar', bottom: false },
+    { id: 'activity', label: 'Activity', icon: 'Activity', bottom: false },
+    { id: 'settings', label: 'Settings', icon: 'Settings', bottom: true },
   ]);
 
+  const handleMenuItemClick = (itemId) => {
+    if (itemId === 'settings') {
+      // Aqui você pode adicionar lógica para settings
+    }
+    setActiveMenuItem(itemId);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+      <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} onLogout={onLogout} />
       
       <div className="flex">
         <Sidebar 
           activeItem={activeMenuItem} 
-          setActiveItem={setActiveMenuItem}
+          setActiveItem={handleMenuItemClick}
           isOpen={sidebarOpen}
           menuItems={menuItems}
           closeSidebar={() => setSidebarOpen(false)}
         />
         
-        {/* Main content responsivo */}
-        <main className="flex-1 w-full lg:pl-64">
-          <div className="bg-white min-h-[calc(100vh-64px)]">
-            <div className="p-4 md:p-6 lg:p-8">
+        <main className="flex-1 w-full lg:ml-64 pt-16 overflow-x-hidden">
+          <div className="min-h-[calc(100vh-64px)] w-full">
+            <div className="p-4 sm:p-6 lg:p-8 max-w-full">
               {children}
             </div>
           </div>

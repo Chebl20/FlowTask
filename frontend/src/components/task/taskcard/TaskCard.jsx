@@ -1,74 +1,62 @@
-// components/task/taskcard/TaskCard.jsx
 import React from 'react';
-import { Calendar, Clock, Edit, Trash2, Star } from 'lucide-react';
+import { Calendar, Tag, Clock, Activity, CheckCircle } from 'lucide-react';
 
 const TaskCard = ({ task, onEdit, onDelete, onStatusChange }) => {
-  const priorityConfig = {
-    low: { bg: 'bg-green-100', text: 'text-green-700', label: 'Baixa' },
-    medium: { bg: 'bg-yellow-100', text: 'text-yellow-700', label: 'Média' },
-    high: { bg: 'bg-red-100', text: 'text-red-700', label: 'Alta' }
-  };
-
   const statusConfig = {
-    todo: { bg: 'bg-gray-100', text: 'text-gray-700', label: 'A fazer' },
-    in_progress: { bg: 'bg-blue-100', text: 'text-blue-700', label: 'Em progresso' },
-    completed: { bg: 'bg-green-100', text: 'text-green-700', label: 'Concluído' }
+    todo: { color: 'bg-gray-100 text-gray-700', icon: Clock },
+    in_progress: { color: 'bg-blue-100 text-blue-700', icon: Activity },
+    completed: { color: 'bg-green-100 text-green-700', icon: CheckCircle }
   };
 
-  const priority = priorityConfig[task.priority];
-  const status = statusConfig[task.status];
+  const StatusIcon = statusConfig[task.status].icon;
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-5 border border-gray-100">
-      <div className="flex justify-between items-start mb-3">
-        <h3 className="text-lg font-semibold text-gray-900 flex-1 pr-2">{task.title}</h3>
-        <div className="flex gap-1 flex-shrink-0">
+    <div className="w-full bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5 hover:shadow-md transition-all duration-200 group">
+      <div className="flex flex-col h-full space-y-3">
+        {/* Header sem prioridade */}
+        <div className="flex items-start gap-3">
+          <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex-shrink-0 flex items-center justify-center ${statusConfig[task.status].color.split(' ')[0]}`}>
+            <StatusIcon className="w-5 h-5" />
+          </div>
+          <h3 className="text-base sm:text-lg font-semibold text-gray-800 line-clamp-2 group-hover:text-orange-600 transition-colors flex-1">
+            {task.title}
+          </h3>
+        </div>
+        
+        {/* Description */}
+        <p className="text-gray-500 text-sm line-clamp-2 flex-1">
+          {task.description}
+        </p>
+
+        {/* Meta */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-xs text-gray-400">
+          <div className="flex items-center gap-1">
+            <Calendar className="w-3 h-3" />
+            <span>Due: Jan 25, 2025</span>
+          </div>
+          <span className="hidden sm:inline text-gray-300">•</span>
+          <div className="flex items-center gap-1">
+            <Tag className="w-3 h-3" />
+            <span>Task #{task.id}</span>
+          </div>
+        </div>
+        
+        {/* Actions */}
+        <div className="flex gap-2 pt-3 border-t border-gray-100">
           <button
             onClick={() => onEdit(task)}
-            className="p-1.5 hover:bg-gray-100 rounded transition-colors"
-            aria-label="Editar"
+            className="flex-1 px-3 py-2 text-sm bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-medium"
           >
-            <Edit className="w-4 h-4 text-gray-600" />
+            Edit
           </button>
           <button
             onClick={() => onDelete(task.id)}
-            className="p-1.5 hover:bg-red-50 rounded transition-colors"
-            aria-label="Excluir"
+            className="flex-1 px-3 py-2 text-sm bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors font-medium"
           >
-            <Trash2 className="w-4 h-4 text-red-500" />
+            Delete
           </button>
         </div>
       </div>
-
-      {task.description && (
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{task.description}</p>
-      )}
-
-      <div className="flex gap-2 mb-4">
-        <span className={`px-3 py-1 rounded-full text-xs font-medium ${priority.bg} ${priority.text}`}>
-          {priority.label}
-        </span>
-        <span className={`px-3 py-1 rounded-full text-xs font-medium ${status.bg} ${status.text}`}>
-          {status.label}
-        </span>
-      </div>
-
-      {task.dueDate && (
-        <div className="flex items-center text-sm text-gray-500 mb-4">
-          <Calendar className="w-4 h-4 mr-1.5" />
-          {new Date(task.dueDate).toLocaleDateString('pt-BR')}
-        </div>
-      )}
-
-      <select
-        value={task.status}
-        onChange={(e) => onStatusChange(task.id, e.target.value)}
-        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-gray-50"
-      >
-        <option value="todo">A fazer</option>
-        <option value="in_progress">Em progresso</option>
-        <option value="completed">Concluído</option>
-      </select>
     </div>
   );
 };
