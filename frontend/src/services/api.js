@@ -58,10 +58,18 @@ class TarefaAPI {
   // Tarefas
   async criarTarefa(tarefa) {
     try {
+      const tarefaFormatada = {
+        titulo: tarefa.titulo || tarefa.title,
+        descricao: tarefa.descricao || tarefa.description,
+        status: tarefa.status || 'PENDENTE',
+        dataCriacao: new Date().toISOString(),
+        dataConclusao: null
+      };
+
       const response = await fetch(`${this.baseUrl}/tarefa/criarTarefa`, {
         method: 'POST',
         headers: this.getAuthHeaders(),
-        body: JSON.stringify(tarefa)
+        body: JSON.stringify(tarefaFormatada)
       });
 
       if (response.ok) {
