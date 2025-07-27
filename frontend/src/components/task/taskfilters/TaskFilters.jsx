@@ -9,7 +9,7 @@ const TaskFilters = ({
   onNewTask
 }) => {
   return (
-    <div className="w-full bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-6">
+    <div className="w-full bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
       <div className="flex flex-col gap-4">
         {/* Filtros */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">

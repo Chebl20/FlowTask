@@ -5,43 +5,30 @@ import { CheckSquare } from 'lucide-react';
 const TaskList = ({ tasks, onEdit, onDelete, onStatusChange }) => {
   if (tasks.length === 0) {
     return (
-      <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 mx-auto max-w-md">
-        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <CheckSquare className="w-8 h-8 text-gray-400" />
+      <div className="flex items-center justify-center py-12 sm:py-16 md:py-20">
+        <div className="text-center">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+            <CheckSquare className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" />
+          </div>
+          <p className="text-gray-600 text-lg sm:text-xl font-medium mb-2">No tasks found</p>
+          <p className="text-gray-400 text-sm sm:text-base">Click "New Task" to create your first task</p>
         </div>
-        <p className="text-gray-600 text-lg font-medium mb-2">No tasks found</p>
-        <p className="text-gray-400 text-sm">Click "New Task" to create your first task</p>
       </div>
     );
   }
 
   return (
-    <div className="w-full">
-      {/* Mobile: Stack vertical */}
-      <div className="block sm:hidden space-y-4">
-        {tasks.map((task) => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-6">
+      {tasks.map((task) => (
+        <div key={task.id} className="w-full">
           <TaskCard
-            key={task.id}
             task={task}
             onEdit={onEdit}
             onDelete={onDelete}
             onStatusChange={onStatusChange}
           />
-        ))}
-      </div>
-      
-      {/* Tablet e Desktop: Grid */}
-      <div className="hidden sm:grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-        {tasks.map((task) => (
-          <TaskCard
-            key={task.id}
-            task={task}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onStatusChange={onStatusChange}
-          />
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 };

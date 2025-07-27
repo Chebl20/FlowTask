@@ -95,11 +95,6 @@ function App() {
   return (
     <Layout onLogout={handleLogout}>
       <div className="w-full max-w-full mx-auto overflow-x-hidden">
-        <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">My Tasks</h1>
-          <p className="text-gray-500 text-sm sm:text-base">Manage and track your daily tasks efficiently</p>
-        </div>
-        
         {error && (
           <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
             {error}

@@ -7,10 +7,7 @@ const SidebarItem = ({ item, isActive, onClick }) => {
   
   // Cores dos ícones baseadas no tipo
   const iconColors = {
-    dashboard: 'text-orange-500',
-    tasks: 'text-green-500',
-    projects: 'text-yellow-500',
-    settings: 'text-blue-500'
+    dashboard: 'text-orange-500'
   };
 
   return (

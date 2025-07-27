@@ -1,16 +1,7 @@
 import React from 'react';
-import { X, Home, CheckSquare, Folder, Settings, Calendar, Activity } from 'lucide-react';
+import { X, Home } from 'lucide-react';
 
-const Sidebar = ({ activeItem, setActiveItem, isOpen, menuItems, closeSidebar }) => {
-  const icons = {
-    Home: Home,
-    CheckSquare: CheckSquare,
-    Folder: Folder,
-    Settings: Settings,
-    Calendar: Calendar,
-    Activity: Activity
-  };
-
+const Sidebar = ({ isOpen, closeSidebar }) => {
   return (
     <>
       {/* Overlay para mobile */}
@@ -47,65 +38,13 @@ const Sidebar = ({ activeItem, setActiveItem, isOpen, menuItems, closeSidebar })
         
         <nav className="p-4">
           <div className="space-y-1">
-            {menuItems.filter(item => !item.bottom).map(item => {
-              const Icon = icons[item.icon];
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setActiveItem(item.id);
-                    closeSidebar();
-                  }}
-                  className={`
-                    w-full flex items-center gap-3 px-4 py-3 rounded-lg
-                    transition-all duration-200 group
-                    ${activeItem === item.id 
-                      ? 'bg-orange-50 text-orange-600' 
-                      : 'text-gray-600 hover:bg-gray-50'
-                    }
-                  `}
-                >
-                  <Icon className={`w-5 h-5 ${activeItem === item.id ? 'text-orange-600' : 'text-gray-400 group-hover:text-gray-600'}`} />
-                  <span className="font-medium">{item.label}</span>
-                  {item.count && (
-                    <span className={`ml-auto text-xs px-2 py-0.5 rounded-full ${
-                      activeItem === item.id 
-                        ? 'bg-orange-100 text-orange-600' 
-                        : 'bg-gray-100 text-gray-500'
-                    }`}>
-                      {item.count}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-          
-          {/* Bottom items */}
-          <div className="absolute bottom-4 left-4 right-4">
-            {menuItems.filter(item => item.bottom).map(item => {
-              const Icon = icons[item.icon];
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setActiveItem(item.id);
-                    closeSidebar();
-                  }}
-                  className={`
-                    w-full flex items-center gap-3 px-4 py-3 rounded-lg
-                    transition-all duration-200 group
-                    ${activeItem === item.id 
-                      ? 'bg-orange-50 text-orange-600' 
-                      : 'text-gray-600 hover:bg-gray-50'
-                    }
-                  `}
-                >
-                  <Icon className={`w-5 h-5 ${activeItem === item.id ? 'text-orange-600' : 'text-gray-400 group-hover:text-gray-600'}`} />
-                  <span className="font-medium">{item.label}</span>
-                </button>
-              );
-            })}
+            <button
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg
+                bg-orange-50 text-orange-600 transition-all duration-200"
+            >
+              <Home className="w-5 h-5 text-orange-600" />
+              <span className="font-medium">Dashboard</span>
+            </button>
           </div>
         </nav>
       </aside>

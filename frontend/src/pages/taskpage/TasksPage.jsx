@@ -4,6 +4,7 @@ import { useTasks } from '../../hooks/useTasks';
 import TaskList from '../../components/task/tasklist/TaskList';
 import TaskModal from '../../components/task/taskcard/TaskModal';
 import TaskFilters from '../../components/task/taskfilters/TaskFilters';
+import TaskStats from '../../components/task/taskstats/TaskStats';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import ErrorMessage from '../../components/ui/ErrorMessage';
 
@@ -71,35 +72,34 @@ const TasksPage = () => {
   if (error) return <ErrorMessage message={error} onRetry={refetch} />;
 
   return (
-    <div className="w-full">
-      {/* Header da página */}
-      <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Minhas Tarefas</h1>
-        <p className="text-gray-600 text-sm md:text-base">Gerencie suas tarefas de forma eficiente</p>
+    <div className="min-h-screen">
+      <div className="p-4 sm:p-6 lg:p-8">
+        {/* Stats */}
+        <TaskStats tasks={tasks} />
+        
+        {/* Filtros e botão Nova Tarefa */}
+        <TaskFilters 
+          filterStatus={filterStatus}
+          setFilterStatus={setFilterStatus}
+          filterPriority={filterPriority}
+          setFilterPriority={setFilterPriority}
+          onNewTask={() => {
+            setEditingTask(null);
+            setShowTaskModal(true);
+          }}
+        />
+        
+        {/* Lista de tarefas */}
+        <TaskList 
+          tasks={filteredTasks}
+          onEdit={(task) => {
+            setEditingTask(task);
+            setShowTaskModal(true);
+          }}
+          onDelete={handleDeleteTask}
+          onStatusChange={handleStatusChange}
+        />
       </div>
-      
-      {/* Filtros e botão Nova Tarefa */}
-      <TaskFilters 
-        filterStatus={filterStatus}
-        setFilterStatus={setFilterStatus}
-        filterPriority={filterPriority}
-        setFilterPriority={setFilterPriority}
-        onNewTask={() => {
-          setEditingTask(null);
-          setShowTaskModal(true);
-        }}
-      />
-      
-      {/* Lista de tarefas */}
-      <TaskList 
-        tasks={filteredTasks}
-        onEdit={(task) => {
-          setEditingTask(task);
-          setShowTaskModal(true);
-        }}
-        onDelete={handleDeleteTask}
-        onStatusChange={handleStatusChange}
-      />
       
       {/* Modal */}
       <TaskModal
@@ -108,7 +108,7 @@ const TasksPage = () => {
           setShowTaskModal(false);
           setEditingTask(null);
         }}
-        onSubmit={editingTask ? handleUpdateTask : handleCreateTask}
+        onSave={editingTask ? handleUpdateTask : handleCreateTask}
         task={editingTask}
       />
     </div>

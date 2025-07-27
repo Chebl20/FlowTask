@@ -22,7 +22,7 @@ const Layout = ({ children, onLogout }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+    <div className="min-h-screen bg-gray-50">
       <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} onLogout={onLogout} />
       
       <div className="flex">
@@ -34,11 +34,9 @@ const Layout = ({ children, onLogout }) => {
           closeSidebar={() => setSidebarOpen(false)}
         />
         
-        <main className="flex-1 w-full lg:ml-64 pt-16 overflow-x-hidden">
-          <div className="min-h-[calc(100vh-64px)] w-full">
-            <div className="p-4 sm:p-6 lg:p-8 max-w-full">
-              {children}
-            </div>
+        <main className="flex-1 w-full lg:ml-64 pt-16">
+          <div className="min-h-[calc(100vh-64px)] w-full px-4 sm:px-6 lg:px-8">
+            {children}
           </div>
         </main>
       </div>

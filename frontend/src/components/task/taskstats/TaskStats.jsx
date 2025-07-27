@@ -10,7 +10,7 @@ const TaskStats = ({ tasks }) => {
   };
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-4 sm:mt-6 mb-6">
       <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100">
         <div className="flex items-center justify-between mb-2">
           <span className="text-gray-500 text-xs sm:text-sm">Total Tasks</span>

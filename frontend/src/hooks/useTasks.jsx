@@ -8,12 +8,17 @@ export const useTasks = () => {
 
   // Mapear status da API para o formato do frontend
   const mapTaskStatus = (status) => {
+    // Normalizar para maiúsculas para garantir o match
+    const normalizedStatus = status?.toUpperCase();
+    
     const statusMap = {
-      'Pendente': 'todo',
-      'Em Progresso': 'in_progress',
-      'Concluída': 'completed'
+      'PENDENTE': 'todo',
+      'EM PROGRESSO': 'in_progress',
+      'CONCLUÍDA': 'completed',
+      'CONCLUIDA': 'completed' // Sem acento também
     };
-    return statusMap[status] || 'todo';
+    
+    return statusMap[normalizedStatus] || 'todo';
   };
 
   // Mapear status do frontend para a API
@@ -32,16 +37,20 @@ export const useTasks = () => {
     const result = await api.listarTarefas();
     
     if (result.success) {
+      console.log('Tarefas da API:', result.data); // Debug
+      
       // Transformar tarefas da API para o formato do frontend
       const mappedTasks = result.data.map(task => ({
         id: task.id,
         title: task.titulo,
         description: task.descricao,
-        status: mapTaskStatus(task.status),
+        status: mapTaskStatus(task.status || task.statusTarefa), // Verificar ambos os campos
         priority: 'medium', // A API não tem prioridade, então vamos definir como padrão
         userId: task.usuarioId,
         userName: task.nomeUsuario
       }));
+      
+      console.log('Tarefas mapeadas:', mappedTasks); // Debug
       setTasks(mappedTasks);
       setError(null);
     } else {
@@ -52,13 +61,8 @@ export const useTasks = () => {
 
   // Criar tarefa
   const createTask = async (taskData) => {
-    const apiTask = {
-      titulo: taskData.title,
-      descricao: taskData.description,
-      statusTarefa: mapStatusToAPI(taskData.status || 'todo')
-    };
-
-    const result = await api.criarTarefa(apiTask);
+    // taskData já vem no formato da API do TaskModal
+    const result = await api.criarTarefa(taskData);
     
     if (result.success) {
       await loadTasks(); // Recarregar lista
@@ -70,10 +74,32 @@ export const useTasks = () => {
 
   // Atualizar tarefa
   const updateTask = async (id, taskData) => {
-    const apiTask = {
+    // Se taskData vier do frontend, precisamos mapear
+    const apiTask = taskData.titulo ? taskData : {
       titulo: taskData.title,
       descricao: taskData.description,
       statusTarefa: mapStatusToAPI(taskData.status)
+    };
+
+    const result = await api.atualizarTarefa(id, apiTask);
+    
+    if (result.success) {
+      await loadTasks(); // Recarregar lista
+      return { success: true };
+    }
+    
+    return { success: false, error: result.error };
+  };
+
+  // Atualizar apenas o status da tarefa
+  const updateTaskStatus = async (id, newStatus) => {
+    const task = tasks.find(t => t.id === id);
+    if (!task) return { success: false, error: 'Tarefa não encontrada' };
+
+    const apiTask = {
+      titulo: task.title,
+      descricao: task.description,
+      statusTarefa: mapStatusToAPI(newStatus)
     };
 
     const result = await api.atualizarTarefa(id, apiTask);
@@ -112,6 +138,7 @@ export const useTasks = () => {
     loadTasks,
     createTask,
     updateTask,
-    deleteTask
+    deleteTask,
+    updateTaskStatus
   };
 };

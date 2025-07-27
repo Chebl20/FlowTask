@@ -29,7 +29,18 @@ const TaskModal = ({ isOpen, onClose, onSave, task }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(formData);
+    
+    // Mapear os campos para o formato esperado pela API
+    const apiData = {
+      titulo: formData.title,
+      descricao: formData.description,
+      statusTarefa: formData.status === 'todo' ? 'PENDENTE' : 
+                     formData.status === 'in_progress' ? 'EM PROGRESSO' : 
+                     'CONCLUÍDA'
+    };
+    
+    console.log('Enviando para API:', apiData);
+    onSave(apiData);
   };
 
   const handleChange = (e) => {
