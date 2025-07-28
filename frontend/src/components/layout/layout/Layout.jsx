@@ -27,12 +27,10 @@ const Layout = ({ children, onLogout }) => {
       
       <div className="flex">
         <Sidebar 
-          activeItem={activeMenuItem} 
-          setActiveItem={handleMenuItemClick}
-          isOpen={sidebarOpen}
-          menuItems={menuItems}
-          closeSidebar={() => setSidebarOpen(false)}
-        />
+  isOpen={sidebarOpen} 
+  closeSidebar={() => setSidebarOpen(false)}
+  onLogout={onLogout} // Passa a função de logout recebida do App
+/>
         
         <main className="flex-1 w-full lg:ml-64 pt-16">
           <div className="min-h-[calc(100vh-64px)] w-full px-4 sm:px-6 lg:px-8">
