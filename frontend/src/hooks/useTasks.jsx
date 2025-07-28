@@ -44,7 +44,7 @@ export const useTasks = () => {
         id: task.id,
         title: task.titulo,
         description: task.descricao,
-        status: mapTaskStatus(task.status || task.statusTarefa), // Verificar ambos os campos
+        status: mapTaskStatus(task.status || task.status), // Verificar ambos os campos
         priority: 'medium', // A API não tem prioridade, então vamos definir como padrão
         userId: task.usuarioId,
         userName: task.nomeUsuario
@@ -78,7 +78,7 @@ export const useTasks = () => {
     const apiTask = taskData.titulo ? taskData : {
       titulo: taskData.title,
       descricao: taskData.description,
-      statusTarefa: mapStatusToAPI(taskData.status)
+      status: mapStatusToAPI(taskData.status)
     };
 
     const result = await api.atualizarTarefa(id, apiTask);
@@ -99,7 +99,7 @@ export const useTasks = () => {
     const apiTask = {
       titulo: task.title,
       descricao: task.description,
-      statusTarefa: mapStatusToAPI(newStatus)
+      status: mapStatusToAPI(newStatus)
     };
 
     const result = await api.atualizarTarefa(id, apiTask);

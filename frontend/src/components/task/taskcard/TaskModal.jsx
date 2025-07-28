@@ -34,7 +34,7 @@ const TaskModal = ({ isOpen, onClose, onSave, task }) => {
     const apiData = {
       titulo: formData.title,
       descricao: formData.description,
-      statusTarefa: formData.status === 'todo' ? 'PENDENTE' : 
+      status: formData.status === 'todo' ? 'PENDENTE' : 
                      formData.status === 'in_progress' ? 'EM PROGRESSO' : 
                      'CONCLUÍDA'
     };
