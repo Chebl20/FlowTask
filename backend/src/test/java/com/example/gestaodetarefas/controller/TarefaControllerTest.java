@@ -58,13 +58,11 @@ class TarefaControllerTest {
         tarefaResponse = new TarefaResponse(1L, "Tarefa Teste", "Descrição da tarefa", "Pendente", 1L, "Teste");
     }
 
-    @Nested
-    @DisplayName("Testes de Salvar Tarefa")
-    class SalvarTarefaTest {
+
 
         @Test
         @DisplayName("Deve salvar uma tarefa com sucesso")
-        void deveSalvarTarefaComSucesso() {
+        void testSalvarTarefaComSucesso() {
             // Arrange
             when(tarefaService.salvarTarefa(any(Tarefa.class))).thenReturn(tarefaPadrao);
             when(tarefaMapper.toResponse(tarefaPadrao)).thenReturn(tarefaResponse);
@@ -83,7 +81,7 @@ class TarefaControllerTest {
 
         @Test
         @DisplayName("Deve lançar exceção quando tarefa for nula")
-        void deveLancarExcecaoQuandoTarefaForNula() {
+        void testLancarExcecaoQuandoTarefaForNula() {
             // Act & Assert
             assertThrows(IllegalArgumentException.class,
                     () -> tarefaController.salvarTarefa(null, usuario),
@@ -94,7 +92,7 @@ class TarefaControllerTest {
 
         @Test
         @DisplayName("Deve lançar exceção quando usuário for nulo")
-        void deveLancarExcecaoQuandoUsuarioForNulo() {
+        void testLancarExcecaoQuandoUsuarioForNulo() {
             // Act & Assert
             assertThrows(IllegalArgumentException.class,
                     () -> tarefaController.salvarTarefa(tarefaPadrao, null),
@@ -102,15 +100,13 @@ class TarefaControllerTest {
             );
             verify(tarefaService, never()).salvarTarefa(any());
         }
-    }
 
-    @Nested
-    @DisplayName("Testes de Listar Tarefas")
-    class ListarTarefasTest {
+
+
 
         @Test
         @DisplayName("Deve retornar lista de tarefas")
-        void deveRetornarListaDeTarefas() {
+        void testRetornarListaDeTarefas() {
             // Arrange
             List<Tarefa> tarefas = Arrays.asList(
                     new Tarefa(1L, "Tarefa 1", "Descrição 1", "Pendente"),
@@ -143,7 +139,7 @@ class TarefaControllerTest {
 
         @Test
         @DisplayName("Deve retornar lista vazia quando não houver tarefas")
-        void deveRetornarListaVazia() {
+        void testRetornarListaVazia() {
             // Arrange
             when(tarefaService.listarTarefas(usuario)).thenReturn(Collections.emptyList());
 
@@ -156,15 +152,11 @@ class TarefaControllerTest {
                     () -> assertTrue(response.getBody().isEmpty(), "Deveria retornar lista vazia")
             );
         }
-    }
 
-    @Nested
-    @DisplayName("Testes de Buscar Tarefa")
-    class BuscarTarefaTest {
 
         @Test
         @DisplayName("Deve buscar tarefa por ID com sucesso")
-        void deveBuscarTarefaPorId() {
+        void testBuscarTarefaPorId() {
             // Arrange
             when(tarefaService.buscarTarefa(1L, usuario)).thenReturn(tarefaPadrao);
             when(tarefaMapper.toResponse(tarefaPadrao)).thenReturn(tarefaResponse);
@@ -183,7 +175,7 @@ class TarefaControllerTest {
 
         @Test
         @DisplayName("Deve lançar exceção quando tarefa não for encontrada")
-        void deveLancarExcecaoQuandoTarefaNaoEncontrada() {
+        void testLancarExcecaoQuandoTarefaNaoEncontrada() {
             // Arrange
             when(tarefaService.buscarTarefa(999L, usuario)).thenThrow(NoSuchElementException.class);
 
@@ -193,15 +185,11 @@ class TarefaControllerTest {
                     "Deveria lançar NoSuchElementException quando tarefa não for encontrada"
             );
         }
-    }
 
-    @Nested
-    @DisplayName("Testes de Atualizar Tarefa")
-    class AtualizarTarefaTest {
 
         @Test
         @DisplayName("Deve atualizar uma tarefa existente com sucesso")
-        void deveAtualizarTarefa() {
+        void testAtualizarTarefa() {
             // Arrange
             TarefaResponse responseAtualizada = new TarefaResponse(1L, "Tarefa Atualizada", "Nova descrição", "Concluída", 1l, "Teste");
 
@@ -221,7 +209,7 @@ class TarefaControllerTest {
 
         @Test
         @DisplayName("Deve lançar exceção ao tentar atualizar tarefa inexistente")
-        void deveLancarExcecaoAoAtualizarTarefaInexistente() {
+        void testLancarExcecaoAoAtualizarTarefaInexistente() {
             // Arrange
             when(tarefaService.atualizarTarefa(999L, tarefaAtualizada, usuario))
                     .thenThrow(NoSuchElementException.class);
@@ -235,7 +223,7 @@ class TarefaControllerTest {
 
         @Test
         @DisplayName("Deve lançar exceção quando ID do path não corresponde ao ID da tarefa")
-        void deveLancarExcecaoQuandoIdPathDiferenteDoIdTarefa() {
+        void testLancarExcecaoQuandoIdPathDiferenteDoIdTarefa() {
             // Arrange
             Tarefa tarefaComIdDiferente = new Tarefa(2L, "Tarefa Errada", "Desc", "Pendente");
 
@@ -246,16 +234,11 @@ class TarefaControllerTest {
             );
             verify(tarefaService, never()).atualizarTarefa(any(), any(), any());
         }
-    }
 
-    @Nested
-    @DisplayName("Testes de Deletar Tarefa")
-    class DeletarTarefaTest {
 
         @Test
         @DisplayName("Deve deletar uma tarefa com sucesso")
-
-        void deveDeletarTarefa() {
+        void testDeletarTarefa() {
             // Arrange
             doNothing().when(tarefaService).deletarTarefa(1L, usuario);
 
@@ -270,7 +253,7 @@ class TarefaControllerTest {
 
         @Test
         @DisplayName("Deve lançar exceção ao tentar deletar tarefa inexistente")
-        void deveLancarExcecaoAoDeletarTarefaInexistente() {
+        void testLancarExcecaoAoDeletarTarefaInexistente() {
             // Arrange
             doThrow(NoSuchElementException.class).when(tarefaService).deletarTarefa(999L, usuario);
 
@@ -280,5 +263,5 @@ class TarefaControllerTest {
                     "Deveria lançar NoSuchElementException ao tentar deletar tarefa inexistente"
             );
         }
-    }
+
 }

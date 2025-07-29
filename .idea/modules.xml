@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FlowTask.iml" filepath="$PROJECT_DIR$/FlowTask.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gestaoDeTarefas.main.iml" filepath="$PROJECT_DIR$/.idea/modules/gestaoDeTarefas.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/FlowTask.iml" filepath="$PROJECT_DIR$/.idea/FlowTask.iml" />
     </modules>
   </component>
 </project>
