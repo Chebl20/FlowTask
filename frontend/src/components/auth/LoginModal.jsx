@@ -1,32 +1,8 @@
 import React, { useState } from 'react';
 import { X, Mail, Lock, User } from 'lucide-react';
+import api from '../../services/api';
 
-// Simulação da API
-const api = {
-  login: async (email, password) => {
-    // Simula uma chamada de API
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Simula validação básica
-    if (email && password.length >= 6) {
-      return { success: true };
-    }
-    return { success: false, error: 'Email ou senha inválidos' };
-  },
-
-  registrar: async (formData) => {
-    // Simula uma chamada de API
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Simula validação básica
-    if (formData.nome && formData.email && formData.password.length >= 6) {
-      return { success: true };
-    }
-    return { success: false, error: 'Preencha todos os campos corretamente' };
-  }
-};
-
-const LoginModal = ({ isOpen = true, onLogin = () => alert('Login realizado com sucesso!') }) => {
+const LoginModal = ({ isOpen = true, onLogin = () => { } }) => {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [formData, setFormData] = useState({
     nome: '',
@@ -44,17 +20,22 @@ const LoginModal = ({ isOpen = true, onLogin = () => alert('Login realizado com 
       if (isLoginMode) {
         const result = await api.login(formData.email, formData.password);
         if (result.success) {
-          onLogin();
+          onLogin(result.data); // Passar os dados do usuário logado
         } else {
           setError(result.error);
         }
       } else {
-        const result = await api.registrar(formData);
+        const result = await api.registrar({
+          nome: formData.nome,
+          email: formData.email,
+          password: formData.password
+        });
+
         if (result.success) {
           // Fazer login automático após registro
           const loginResult = await api.login(formData.email, formData.password);
           if (loginResult.success) {
-            onLogin();
+            onLogin(loginResult.data);
           }
         } else {
           setError(result.error);
