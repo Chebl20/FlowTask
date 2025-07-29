@@ -29,16 +29,16 @@ const TaskModal = ({ isOpen, onClose, onSave, task }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Mapear os campos para o formato esperado pela API
     const apiData = {
       titulo: formData.title,
       descricao: formData.description,
-      status: formData.status === 'todo' ? 'PENDENTE' : 
-                     formData.status === 'in_progress' ? 'EM PROGRESSO' : 
-                     'CONCLUÍDA'
+      status: formData.status === 'todo' ? 'PENDENTE' :
+        formData.status === 'in_progress' ? 'EM PROGRESSO' :
+          'CONCLUÍDA'
     };
-    
+
     console.log('Enviando para API:', apiData);
     onSave(apiData);
   };
@@ -145,7 +145,7 @@ const TaskModal = ({ isOpen, onClose, onSave, task }) => {
             </button>
             <button
               type="submit"
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-lg hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-200 font-medium"
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-500 text-white rounded-lg hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-200 font-medium"
             >
               {task ? 'Salvar' : 'Criar'}
             </button>
