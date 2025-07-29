@@ -14,24 +14,24 @@ const Layout = ({ children, onLogout }) => {
     { id: 'settings', label: 'Settings', icon: 'Settings', bottom: true },
   ]);
 
-  const handleMenuItemClick = (itemId) => {
-    if (itemId === 'settings') {
-      // Aqui você pode adicionar lógica para settings
-    }
-    setActiveMenuItem(itemId);
-  };
+  // const handleMenuItemClick = (itemId) => {
+  //   if (itemId === 'settings') {
+  //     // Aqui você pode adicionar lógica para settings
+  //   }
+  //   setActiveMenuItem(itemId);
+  // };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} onLogout={onLogout} />
-      
+
       <div className="flex">
-        <Sidebar 
-  isOpen={sidebarOpen} 
-  closeSidebar={() => setSidebarOpen(false)}
-  onLogout={onLogout} // Passa a função de logout recebida do App
-/>
-        
+        <Sidebar
+          isOpen={sidebarOpen}
+          closeSidebar={() => setSidebarOpen(false)}
+          onLogout={onLogout} // Passa a função de logout recebida do App
+        />
+
         <main className="flex-1 w-full lg:ml-64 pt-16">
           <div className="min-h-[calc(100vh-64px)] w-full px-4 sm:px-6 lg:px-8">
             {children}
