@@ -13,34 +13,34 @@ const TaskStats = ({ tasks }) => {
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-4 sm:mt-6 mb-6">
       <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-gray-500 text-xs sm:text-sm">Total Tasks</span>
+          <span className="text-gray-500 text-xs sm:text-sm">Total de Tasks</span>
           <div className="w-7 h-7 sm:w-8 sm:h-8 bg-purple-100 rounded-lg flex items-center justify-center">
             <CheckSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-600" />
           </div>
         </div>
         <p className="text-xl sm:text-2xl font-bold text-gray-800">{stats.total}</p>
       </div>
-      
+
       <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-gray-500 text-xs sm:text-sm">Completed</span>
+          <span className="text-gray-500 text-xs sm:text-sm">Concluído</span>
           <div className="w-7 h-7 sm:w-8 sm:h-8 bg-green-100 rounded-lg flex items-center justify-center">
             <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
           </div>
         </div>
         <p className="text-xl sm:text-2xl font-bold text-gray-800">{stats.completed}</p>
       </div>
-      
+
       <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-gray-500 text-xs sm:text-sm">In Progress</span>
+          <span className="text-gray-500 text-xs sm:text-sm">Em progresso</span>
           <div className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-100 rounded-lg flex items-center justify-center">
             <Activity className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" />
           </div>
         </div>
         <p className="text-xl sm:text-2xl font-bold text-gray-800">{stats.inProgress}</p>
       </div>
-      
+
       <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100">
         <div className="flex items-center justify-between mb-2">
           <span className="text-gray-500 text-xs sm:text-sm">To Do</span>

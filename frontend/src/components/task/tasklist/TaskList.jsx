@@ -10,8 +10,8 @@ const TaskList = ({ tasks, onEdit, onDelete, onStatusChange }) => {
           <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
             <CheckSquare className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" />
           </div>
-          <p className="text-gray-600 text-lg sm:text-xl font-medium mb-2">No tasks found</p>
-          <p className="text-gray-400 text-sm sm:text-base">Click "New Task" to create your first task</p>
+          <p className="text-gray-600 text-lg sm:text-xl font-medium mb-2">Sem Tasks</p>
+          <p className="text-gray-400 text-sm sm:text-base">Clique em "Nova Task" para criar sua primeira task!</p>
         </div>
       </div>
     );

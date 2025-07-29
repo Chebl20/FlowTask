@@ -1,8 +1,32 @@
 import React, { useState } from 'react';
 import { X, Mail, Lock, User } from 'lucide-react';
-import api from '../../services/api';
 
-const LoginModal = ({ isOpen, onLogin }) => {
+// Simulação da API
+const api = {
+  login: async (email, password) => {
+    // Simula uma chamada de API
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Simula validação básica
+    if (email && password.length >= 6) {
+      return { success: true };
+    }
+    return { success: false, error: 'Email ou senha inválidos' };
+  },
+
+  registrar: async (formData) => {
+    // Simula uma chamada de API
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Simula validação básica
+    if (formData.nome && formData.email && formData.password.length >= 6) {
+      return { success: true };
+    }
+    return { success: false, error: 'Preencha todos os campos corretamente' };
+  }
+};
+
+const LoginModal = ({ isOpen = true, onLogin = () => alert('Login realizado com sucesso!') }) => {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [formData, setFormData] = useState({
     nome: '',
@@ -12,8 +36,7 @@ const LoginModal = ({ isOpen, onLogin }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setLoading(true);
     setError('');
 
@@ -52,21 +75,27 @@ const LoginModal = ({ isOpen, onLogin }) => {
     setError('');
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit();
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 sm:p-8">
+    <div className="fixed inset-0 bg-white/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 sm:p-8 border border-gray-200">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <span className="text-white font-bold text-2xl">T</span>
           </div>
           <h2 className="text-2xl font-bold text-gray-800">
             {isLoginMode ? 'Bem-vindo de volta!' : 'Criar conta'}
           </h2>
           <p className="text-gray-500 mt-2">
-            {isLoginMode 
-              ? 'Entre para gerenciar suas tarefas' 
+            {isLoginMode
+              ? 'Entre para gerenciar suas tarefas'
               : 'Registre-se para começar a organizar suas tarefas'}
           </p>
         </div>
@@ -77,7 +106,7 @@ const LoginModal = ({ isOpen, onLogin }) => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-4">
           {!isLoginMode && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -90,7 +119,7 @@ const LoginModal = ({ isOpen, onLogin }) => {
                   name="nome"
                   value={formData.nome}
                   onChange={handleChange}
-                  required={!isLoginMode}
+                  onKeyPress={handleKeyPress}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
                   placeholder="Seu nome completo"
                 />
@@ -109,7 +138,7 @@ const LoginModal = ({ isOpen, onLogin }) => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                required
+                onKeyPress={handleKeyPress}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
                 placeholder="seu@email.com"
               />
@@ -127,7 +156,7 @@ const LoginModal = ({ isOpen, onLogin }) => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                required
+                onKeyPress={handleKeyPress}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
                 placeholder="••••••••"
               />
@@ -135,15 +164,15 @@ const LoginModal = ({ isOpen, onLogin }) => {
           </div>
 
           <button
-            type="submit"
+            onClick={handleSubmit}
             disabled={loading}
-            className="w-full py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-lg hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading 
-              ? 'Processando...' 
+            {loading
+              ? 'Processando...'
               : isLoginMode ? 'Entrar' : 'Criar conta'}
           </button>
-        </form>
+        </div>
 
         <div className="mt-6 text-center">
           <p className="text-gray-600">
@@ -154,7 +183,7 @@ const LoginModal = ({ isOpen, onLogin }) => {
                 setError('');
                 setFormData({ nome: '', email: '', password: '' });
               }}
-              className="ml-2 text-orange-600 hover:text-orange-700 font-medium"
+              className="ml-2 text-orange-500 hover:text-orange-600 font-medium"
             >
               {isLoginMode ? 'Registre-se' : 'Entre'}
             </button>
